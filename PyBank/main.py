@@ -74,6 +74,7 @@ num_months                 = 0
 net_profit_or_loss         = 0.0 
 profit_loss_changes        = dict()
 previous_month_profit_loss = 0.00
+is_this_first_row          = True
 
 # Open csv file from Resources directory
 csvpath = os.path.join('.', 'Resources', 'budget_data.csv')
@@ -88,46 +89,45 @@ with open(csvpath) as csvfile:
         
         current_month = row[0]
         current_profit_loss = float(row[1])
+        
         # increment number of months counter
-        num_months = num_months + 1
+        num_months += 1
         # Accumulate net amount of profit or loss
-        net_profit_or_loss = net_profit_or_loss + current_profit_loss
-        # Compute the change in profit or loss and save to dictionary
-        profit_loss_changes[current_month] = (current_profit_loss - previous_month_profit_loss )
+        net_profit_or_loss += current_profit_loss
+        
+        # From second row onward, compute the change in profit or loss and save to dictionary
+        if is_this_first_row == False:
+          profit_loss_changes[current_month] = (current_profit_loss - previous_month_profit_loss )
+        
         previous_month_profit_loss = current_profit_loss
+        is_this_first_row = False
 
-    # Average profit or loss amount
-    average_profit_or_loss = net_profit_or_loss / num_months
-    
+    # Average profit or loss changes
+    average_profit_or_loss_changes = sum(profit_loss_changes.values())  / len(profit_loss_changes)
+
+      
     largest_increase = find_largest_profit_increase(profit_loss_changes)
     largest_decrease = find_largest_profit_decrease(profit_loss_changes)
-
-
          
-print("Financial Analysis" + '\n' + "--------------------------------------" + '\n')
-print("Number of Months: %d\n" % num_months)
-print("Total profit/loss: %.2f\n" % net_profit_or_loss)
-print("Average profit/loss: %.2f\n" % average_profit_or_loss)
-print("Greatest Increase in Profits: %s," % list(largest_increase.keys())[0],  end="")
+output_str = "\nFinancial Analysis\n" 
+output_str += "--------------------------------------\n"
+output_str += "Number of Months: %d\n" % num_months
+output_str += "Total profit/loss: %.2f\n" % net_profit_or_loss
+output_str += "Average profit/loss change : %.2f\n" % average_profit_or_loss_changes
+output_str += "Greatest Increase in Profits: %s," % list(largest_increase.keys())[0]
+
 for thevalue in largest_increase.values():
-    print(" occurred on %s." % thevalue[0], " ")
+    output_str +=" occurred on %s.\n" % thevalue[0]
 
-print("--------------------------------------" + '\n')
+output_str += "Greatest Decrease in Profits: %s," % list(largest_decrease.keys())[0]
+
+for thevalue in largest_decrease.values():
+    output_str += " occurred on %s.\n" % thevalue[0]
+
+output_str += "--------------------------------------\n"
 
 
-# print(find_largest_profit_increase(profit_loss_changes))   
-# print(find_largest_profit_decrease(profit_loss_changes))       
-# print(average_profit_or_loss)
-        
-# print(f"Total months : {num_months}" )
-# print(f"Net Profit: { net_profit_or_loss }")
-# print (profit_loss_changes)
-
-#    Define a structure to store the change in Profit/Loss for each month, compared to the previous one
-#    Save the greatest increase in profit in a variable
-#    Save the greatest decrease in losses in a variable
-
-# Print the results to the terminal and to a CSV file as:
+# Print the results to the terminal and to a file as:
 # Financial Analysis
 # ----------------------------
 # Total Months: nn
@@ -135,3 +135,10 @@ print("--------------------------------------" + '\n')
 # Average  Change: $nnnnnn.nn
 # Greatest Increase in Profits: Mon-YYYY ($nnnnnnnn)
 # Greatest Decrease in Profits: Mon-YYYY ($nnnnnnnn)
+
+print(output_str)
+
+outfile = open ("./Resources/pybank_analysis.txt", "w")
+outfile.write(output_str)
+outfile.close
+
