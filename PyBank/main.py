@@ -70,15 +70,15 @@ def find_largest_profit_increase(changes_dictionary):
         
 #------------------------------------------------------------------------------------------
 
-num_months = 0 # Number of months count
-net_profit_or_loss = 0.0
-profit_loss_changes = dict()
+num_months                 = 0
+net_profit_or_loss         = 0.0 
+profit_loss_changes        = dict()
 previous_month_profit_loss = 0.00
 
 # Open csv file from Resources directory
 csvpath = os.path.join('.', 'Resources', 'budget_data.csv')
 
-#Traverse each line in the file
+#Traverse each line in the file, skipping the header
 with open(csvpath) as csvfile:
     csvreader = csv.reader(csvfile, delimiter=',')
     csv_header = next(csvreader) 
@@ -92,11 +92,12 @@ with open(csvpath) as csvfile:
         num_months = num_months + 1
         # Accumulate net amount of profit or loss
         net_profit_or_loss = net_profit_or_loss + current_profit_loss
+        # Compute the change in profit or loss and save to dictionary
         profit_loss_changes[current_month] = (current_profit_loss - previous_month_profit_loss )
         previous_month_profit_loss = current_profit_loss
 
-        # Average profit or loss amount
-        average_profit_or_loss = net_profit_or_loss / num_months
+    # Average profit or loss amount
+    average_profit_or_loss = net_profit_or_loss / num_months
     
     largest_increase = find_largest_profit_increase(profit_loss_changes)
     largest_decrease = find_largest_profit_decrease(profit_loss_changes)
@@ -107,10 +108,11 @@ print("Financial Analysis" + '\n' + "--------------------------------------" + '
 print("Number of Months: %d\n" % num_months)
 print("Total profit/loss: %.2f\n" % net_profit_or_loss)
 print("Average profit/loss: %.2f\n" % average_profit_or_loss)
-# t = largest_increase.items()
-print("Greatest Increase in Profits: %s " % list(largest_increase.keys())[0] )
+print("Greatest Increase in Profits: %s," % list(largest_increase.keys())[0],  end="")
 for thevalue in largest_increase.values():
-    print( "%s" % thevalue)
+    print(" occurred on %s." % thevalue[0], " ")
+
+print("--------------------------------------" + '\n')
 
 
 # print(find_largest_profit_increase(profit_loss_changes))   
