@@ -20,13 +20,13 @@ This homework encompasses a real-world situation where Python scripting skills c
   * The greatest decrease in losses (date and amount) over the entire period
 
  The script is run from the command line:
-  ```text
+  ```
   $python main.py
   ```
   
   Producing the following output:
   
-    ```text
+    ```
     Financial Analysis
     --------------------------------------
     Number of Months: 86
@@ -35,7 +35,7 @@ This homework encompasses a real-world situation where Python scripting skills c
     Greatest Increase in Profits: 1926159.0, occurred on Feb-2012.
     Greatest Decrease in Profits: -2196167.0, occurred on Sep-2013.
     --------------------------------------
-   ```
+    ```
 
  The script also sends this output to a text file (.\Resources\pybank_analysis.txt) with these results.
 
@@ -56,13 +56,13 @@ This homework encompasses a real-world situation where Python scripting skills c
   * The winner of the election based on popular vote.
 
  The script is run from the command line as: 
-  ```text
+  ```
   $python main.py
   ```
   
   Producing the following output:
 
-  ```text
+  ```
 	Election Results
 	-------------------------
 	Total Votes: 3521001
